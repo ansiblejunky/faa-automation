@@ -1,14 +1,21 @@
 #!/usr/bin/env python
 
+# Notes:
+# - Exit python script using `sys.exit(n)` function; otherwise MacOS will get error code 255 instead
+# - Max image size limit set by FAA is 25 MB
+
 import sys
+import os
 #import tkMessageBox
 from splinter import Browser
+import yaml
 
+config = yaml.safe_load(open(os.path.expanduser('~') + "/.faa-automate.yml"))
 browser_executable_path = {'executable_path':'/usr/local/bin/chromedriver'}
-fineart_username = 'example@email.com'
-fineart_password = 'password'
-fineart_url_signin = "https://fineartamerica.com/loginartist.php"
-fineart_url_upload = "https://fineartamerica.com/controlpanel/updateartwork.html?newartwork=true"
+faa_username = config['username']
+faa_password = config['password']
+faa_url_signin = "https://fineartamerica.com/loginartist.php"
+faa_url_upload = "https://fineartamerica.com/controlpanel/updateartwork.html?newartwork=true"
 image_filename = ''
 
 if len(sys.argv) >= 2:
@@ -23,6 +30,9 @@ elif len(sys.argv) == 1:
 else:
     sys.exit(0)
 
+if not faa_username or not faa_password:
+    print("No FAA credentials found")
+    sys.exit(0)
 
 try:
     browser = Browser('chrome', **browser_executable_path)
@@ -34,17 +44,17 @@ except:
 #    sys.exit(1)
 
 # sign-in process
-browser.visit(fineart_url_signin)
+browser.visit(faa_url_signin)
 if browser.is_text_present('Artist Login'):
-    browser.fill('username', fineart_username)
-    browser.fill('password', fineart_password)
+    browser.fill('username', faa_username)
+    browser.fill('password', faa_password)
     button = browser.find_by_text('Login')
     button.click()
 else:
     print("Already signed into FAA")
 
 # upload photo
-browser.visit(fineart_url_upload)
+browser.visit(faa_url_upload)
 if browser.is_text_present('Upload New Image'):
     browser.fill('uploadimage', image_filename)
     button = browser.find_by_text('Upload Image')

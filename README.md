@@ -1,70 +1,51 @@
 # Fine Art America - Automated Image Uploader
 
-Python tool to automate the uploading of images stored within `Adobe Lightroom` into my `Fine Art America (FAA)` gallery website. FAA does not provide any batch mechanism to upload images (intentional) but manually doing each image is painful enough to where I decided to automate it.
+FAA intentionally lacks any batch mechanism to upload images but manually doing each image is painful enough to where I decided to automate it. `FAA Automate` is a photography workflow tool (written in Python) that does the following:
+
+- Export image from `Adobe Lightroom`
+- Navigate to `Fine Art America (FAA)` gallery website
+- Login to website
+- Navigate to image import page
+- Import image into `Fine Art America (FAA)`
+- Provide opportunity to adjust default settings
 
 ## Requirements
 
-Install the following driver in a folder that is in the $PATH environment variable. For example, `/usr/local/bin`; and then edit the `executable_path` variable below.
-
-- [splinter](https://splinter.readthedocs.io/en/latest/)
-- [ChromeDriver](https://sites.google.com/chromium.org/driver/)
-- [py2app](https://py2app.readthedocs.io/en/latest/index.html)
-
-## Notes
-
-- make sure to exit python script using `sys.exit(n)` function; otherwise MacOS will get error code 255 instead
-- make sure the generated setup.py has the following option to handle arguments:
-      OPTIONS = {'argv_emulation': True}
-- go headless browser using the following PhantomJS browser driver:
-      http://splinter.readthedocs.io/en/latest/drivers/phantomjs.html
 
 ## Build
 
 Use the following steps to build the application:
 
 ```shell
-# Download chromedriver
-# Unzip contents and right-click open the file to tell macOS that it is safe
+# Download and unzip and move chromedriver to /usr/local/bin/ folder
+SYSTEM_NAME=mac64 && LATEST_VERSION=$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE) && wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/$LATEST_VERSION/chromedriver_$SYSTEM_NAME.zip && sudo unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/;
 
-# Verify the executable path for the chromedrive is specified in the python script)
-mv chromedriver /usr/local/bin/chromedriver
 # Create setup package
-py2applet --make-setup fine-art-america-automate.py
-# Install/setup package
+py2applet --make-setup --argv-emulation faa-automate.py
+# Build the application
 python setup.py py2app
-# Application now has been created and exists within the ./dist folder.
-# Copy the application to your favorite location.
+# Remove any previous application
+rm -rf /Applications/faa-automate.app
+# Move the application to official destination
+mv dist/faa-automate.app /Applications/
 ```
 
 ## TODO:
 
-- add requirements.txt
-- update README with instructions to use
 - remove the use of Tk for windows and use command line instead
-- bring browser to front
 - complete entire upload process - image detail page is more complicated
+- allow config file for default settings etc
 
 ## References
 
-Automation:
-
-- [Chrome WebDriver](http://splinter.readthedocs.io/en/latest/drivers/chrome.html)
-- [Splinter - Python module to test and automate web applications](http://splinter.readthedocs.io/en/latest/index.html#)
-
-GUI:
-
-- [Qt Designer - alternative graphical interface designer](http://pyqt.sourceforge.net/Docs/PyQt4/designer.html)
-
-Python:
-
+- [splinter](https://splinter.readthedocs.io/en/latest/)
+- [ChromeDriver](https://sites.google.com/chromium.org/driver/)
+- [py2app](https://py2app.readthedocs.io/en/latest/index.html)
 - [Building and Distributing Packages with Setuptools](http://setuptools.readthedocs.io/en/latest/setuptools.html)
 - [Creating standalone Mac OS X applications with Python and py2app](https://www.metachris.com/2015/11/create-standalone-mac-os-x-applications-with-python-and-py2app/)
 - [py2app - Create standalone Mac OS X applications with Python](https://py2app.readthedocs.io/en/latest/index.html)
-
-Lightroom:
-
-- [](http://regex.info/blog/lightroom-goodies/run-any-command)
 - [Simple Python Script to export photos from Adobe Lightroom](https://github.com/philroche/py-lightroom-export)
+- [Qt Designer - alternative graphical interface designer](http://pyqt.sourceforge.net/Docs/PyQt4/designer.html)
 
 ## Issues
 
