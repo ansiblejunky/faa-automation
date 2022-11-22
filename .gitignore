@@ -3,3 +3,4 @@ dist
 setup.py
 chromedriver
 *.zip
+.DS_Store
