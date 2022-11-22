@@ -1,0 +1,2 @@
+splinter[selenium4]
+py2app
