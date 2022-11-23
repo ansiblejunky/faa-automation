@@ -32,9 +32,7 @@ mv dist/faa-automate.app /Applications/
 
 ## TODO:
 
-- remove the use of Tk for windows and use command line instead
-- complete entire upload process - image detail page is more complicated
-- allow config file for default settings etc
+- complete entire upload process (image detail page is more complicated)
 
 ## References
 
